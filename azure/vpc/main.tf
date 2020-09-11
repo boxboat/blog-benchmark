@@ -124,6 +124,8 @@ resource "azurerm_virtual_machine" "benchmark_bastion_vm" {
   resource_group_name   = azurerm_resource_group.benchmark.name
   network_interface_ids = [azurerm_network_interface.benchmark_bastion_interface.id]
   vm_size               = "Standard_B1s"
+  delete_data_disks_on_termination = true
+  delete_os_disk_on_termination = true
 
   storage_os_disk {
     name              = "benchmark_bastion_disk"
@@ -160,6 +162,8 @@ resource "azurerm_virtual_machine" "benchmark_instance_vm" {
   resource_group_name   = azurerm_resource_group.benchmark.name
   network_interface_ids = [element(azurerm_network_interface.benchmark_instance_interface.*.id, count.index)]
   vm_size               = "Standard_D4s_v3"
+  delete_os_disk_on_termination = true
+  delete_data_disks_on_termination = true
 
   storage_os_disk {
     name              = "benchmark_instance_disk_${count.index}"
