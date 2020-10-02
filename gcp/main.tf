@@ -13,6 +13,12 @@ resource "google_compute_instance" "instance" {
   }
 
   network_interface {
-    network = "benchmarkvpc"
+    network = var.vpc
+    access_config {
+    }
+  }
+
+  metadata = {
+    ssh-keys = "${var.ssh_user}:${var.ssh_pub_key}"
   }
 }

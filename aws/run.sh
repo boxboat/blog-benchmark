@@ -8,14 +8,24 @@ function run_test {
     # the time builtin outputs to stderr, so we wrap the builtin in a group and capture 
     # the groups stderr in the results file
     {
-        time { 
-            terraform apply  -auto-approve 2>&1 | tee -a logs
-        }
+        time terraform apply  -auto-approve 2>&1 | tee -a logs
     } 2>> results 
+
+    ip=$(terraform output ip)
+
     {
-        time {
-            terraform destroy -auto-approve  2>&1 | tee -a logs
-        }
+        time { until ssh \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=1 \
+            -o ConnectionAttempts=1 \
+            -i ./benchmark-key.pem \
+            ec2-user@${ip} \
+            exit 2>&1; \
+        do :; done }
+    } 2>> ssh_results
+
+    {
+        time terraform destroy -auto-approve 2>&1 | tee -a logs
     } 2>> destroy_results
 }
 

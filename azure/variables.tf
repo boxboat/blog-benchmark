@@ -3,7 +3,7 @@ variable "location" {
   default = "East US"
 }
 
-variable "resource_group"
+variable "resource_group" {
   type = string
 }
 
@@ -12,5 +12,9 @@ variable "subnet_id" {
 }
 
 variable "admin_password" {
+  type = string
+}
+
+variable "ssh_pub_key" {
   type = string
 }

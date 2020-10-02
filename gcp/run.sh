@@ -12,6 +12,19 @@ function run_test {
             terraform apply  -auto-approve 2>&1 | tee -a logs
         }
     } 2>> results 
+
+    ip=$(terraform output ip)
+
+    {
+        time { until ssh \
+            -o StrictHostKeyChecking=no \
+            -o ConnectTimeout=1 \
+            -o ConnectionAttempts=1 \
+            ${ip} \
+            exit 2>&1; \
+        do :; done }
+    } 2>> ssh_results
+
     {
         time {
             terraform destroy -auto-approve  2>&1 | tee -a logs

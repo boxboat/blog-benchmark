@@ -7,3 +7,8 @@ variable "ami" {
   type    = string
   default = "ami-07c8bc5c1ce9598c3"
 }
+
+variable "key_name" {
+  type    = string
+  default = null
+}
